@@ -62,6 +62,7 @@ export default function CreatePollPage(){
         finally{
             setIsSubmitting(false);
         }
+    }
 
 
         return (
@@ -71,20 +72,52 @@ export default function CreatePollPage(){
                     <div>
                         <label htmlFor='question'> Poll Question:</label>
                         <br/>
-                        <input id='question' type='text' value={question} onChange={(e)=>{setQuestion(e.target.value)}}>
+                        <input id='question' type='text' value={question} onChange={(e)=>{setQuestion(e.target.value)}} />
 
-
-                        </input>
                     </div>
-                    <div>
-                        <label>Options:</label>
-                    </div>
-                </form>
-
-
-
+               <div>
+          <label>Options:</label>
+          {options.map((option, index) => (             //for each option in the options array, we create a different div element with key=index of that element
+            <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <input
+                type="text"
+                value={option}
+                onChange={(e) => handleOptionChange(index, e.target.value)}
+                placeholder={`Option ${index + 1}`}
+                required
+              />
+              {options.length > 2 && (                  //for removing we need the index of the element whichn we already have from the options.map
+                <button type="button" onClick={() => removeOptions(index)} style={{ marginLeft: '0.5rem' }}>            
+                  Remove
+                </button>
+              )}
             </div>
-        )
+          ))}
+          
+
+          <button type='button' onClick={addOptions}>Add Option</button>
+            </div>
+
+          <div>
+          <label htmlFor='duration'>Duration (in minutes):</label>
+          <br/>
+
+        
+          <input type='number' id='duration' value={durationInMinutes} onChange={(e)=>setDurationInMinutes(Number(e.target.value))} required />
+
+
+          </div>
+
+          <button type='submit' disabled={isSubmitting}>{isSubmitting?'Creating...':'Create Poll'}</button>
+
+
+
+        </form>
+
+
+
+        </div>
+        );
 
 
     }
@@ -95,4 +128,3 @@ export default function CreatePollPage(){
 
 
 
-}
