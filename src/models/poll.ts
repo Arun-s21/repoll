@@ -1,8 +1,8 @@
 import mongoose, { Schema } from 'mongoose';
 
 // for a single option in a poll
-const OptionSchema = new Schema({
-  text: {
+const OptionSchema = new Schema({               
+  text: {   
     type: String,
     required: true,
   },
@@ -20,7 +20,7 @@ const PollSchema = new Schema({
     required: [true, 'Question is required'],
     trim: true,
   },
-  options: [OptionSchema], // array of the OptionSchema
+  options: [OptionSchema], // array of the OptionSchema     it is a subdocument so every single element inside it contains its own unique id
   createdAt: {
     type: Date,
     default: Date.now,

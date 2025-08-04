@@ -43,7 +43,7 @@ export async function POST(request:Request){
     return Response.json({
         success: true,
         message: 'Poll created successfully',
-        poll: newPoll,
+        poll: newPoll,                              // creates a new poll object 
       },
       { status: 201
     });
