@@ -35,6 +35,7 @@ export async function GET(request: NextRequest){
       {
         success: true,
         poll: {
+          _id:poll._id,
           question: poll.question,
           options: poll.options,
           expiresAt: poll.expiresAt,
