@@ -40,15 +40,15 @@ export default function CreatePollPage(){
         event.preventDefault();
         setIsSubmitting(true);
         try{
-            const response = axios.post('/api/create-poll',{
+            const response = await axios.post('/api/create-poll',{
                 question,
                 options,
                 durationInMinutes
             });
 
-            const pollId = (await response).data._id;
+            const pollId = response.data.poll._id;
 
-            alert('Poll created successfully, Now redirecting...');
+            alert(`Poll created successfully at ${pollId}, Now redirecting...`);
             router.push(`/admin/poll/${pollId}`);
 
         }
