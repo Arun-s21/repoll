@@ -66,20 +66,21 @@ export default function CreatePollPage(){
 
 
         return (
-            <div>
-                <h1>Create new poll</h1>
+            <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+                <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+                <h1 className="text-4xl font-bold text-center text-yellow-400">Create new poll</h1>
                 <form onSubmit={onSubmit}>
                     <div>
                         <label htmlFor='question'> Poll Question:</label>
                         <br/>
-                        <input id='question' type='text' value={question} onChange={(e)=>{setQuestion(e.target.value)}} />
+                        <input className="w-full p-3 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500" id='question' type='text' value={question} onChange={(e)=>{setQuestion(e.target.value)}} />
 
                     </div>
                <div>
           <label>Options:</label>
           {options.map((option, index) => (             //for each option in the options array, we create a different div element with key=index of that element
             <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <input
+              <input className="flex-grow p-2 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-1 focus:ring-yellow-400"
                 type="text"
                 value={option}
                 onChange={(e) => handleOptionChange(index, e.target.value)}
@@ -87,7 +88,9 @@ export default function CreatePollPage(){
                 required
               />
               {options.length > 2 && (                  //for removing we need the index of the element whichn we already have from the options.map
-                <button type="button" onClick={() => removeOptions(index)} style={{ marginLeft: '0.5rem' }}>            
+                <button className="ml-2 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
+
+                 type="button" onClick={() => removeOptions(index)} style={{ marginLeft: '0.5rem' }}>            
                   Remove
                 </button>
               )}
@@ -95,7 +98,7 @@ export default function CreatePollPage(){
           ))}
           
 
-          <button type='button' onClick={addOptions}>Add Option</button>
+          <button className="mt-2 text-yellow-400 font-semibold hover:text-yellow-500" type='button' onClick={addOptions}>Add Option</button>
             </div>
 
           <div>
@@ -103,16 +106,19 @@ export default function CreatePollPage(){
           <br/>
 
         
-          <input type='number' id='duration' value={durationInMinutes} onChange={(e)=>setDurationInMinutes(Number(e.target.value))} required />
+          <input className="w-full p-3 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500"
+
+ type='number' id='duration' value={durationInMinutes} onChange={(e)=>setDurationInMinutes(Number(e.target.value))} required />
 
 
           </div>
 
-          <button type='submit' disabled={isSubmitting}>{isSubmitting?'Creating...':'Create Poll'}</button>
+          <button className="w-full py-3 mt-4 font-semibold text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-md hover:opacity-90 transition-opacity" type='submit' disabled={isSubmitting}>{isSubmitting?'Creating...':'Create Poll'}</button>
 
 
 
         </form>
+        </div>
 
 
 
