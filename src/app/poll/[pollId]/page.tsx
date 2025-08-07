@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from 'axios';
+import { io } from "socket.io-client";
 
 type OptionType = {
 
@@ -76,6 +77,9 @@ export default function PollPage(){
             finally{
                 setIsLoading(false);
             }
+
+
+            
             
 
 
@@ -85,6 +89,18 @@ export default function PollPage(){
 
 
     },[params.pollId]);
+
+    useEffect(()=>{
+                //connecting to socket.io server
+                const socket = io();
+
+
+                return()=>{
+                    socket.disconnect();            //closing the connection to prevent memory leaks
+                }
+
+
+            },[]);
 
 
     if(isloading){
