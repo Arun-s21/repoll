@@ -23,13 +23,16 @@ export async function GET(request: NextRequest){
 
 
 
-    const now = new Date();
-    if (now > poll.expiresAt) {
-      return NextResponse.json(
-        { success: false, message: 'This poll has expired' },
-        { status: 410 } // 410 more specific status for expired resources
-      );
-    }
+    // const now = new Date();
+    // if (now > poll.expiresAt) {
+    //   return NextResponse.json(
+    //     { success: false, message: 'This poll has expired' },
+    //     { status: 410 } // 410 more specific status for expired resources
+    //   );
+    // }
+
+
+    
 
     return NextResponse.json(
       {
