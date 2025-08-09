@@ -1,121 +1,118 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-
 type OptionType = {
-
-    _id:string;
-    text:string;
-    votes:number;
-
-}
+  _id: string;
+  text: string;
+  votes: number;
+};
 
 type PollType = {
-    _id:string;
-    question:string;
-    options:OptionType[];           //array of type OptionType
-    expiresAt:string;               //not of new Date type because when backend will send data it sends it in json format(simple text/string)
-}
+  _id: string;
+  question: string;
+  options: OptionType[];
+  expiresAt: string;
+};
 
-export default function PollPage(){
-    const params = useParams<{pollId:string}>();               //get the params that has pollId as string
-    const [poll,setPoll] = useState<PollType | null>(null);    // | is or operator for types
-    const[isLoading,setIsLoading] = useState(true);
-    const[error, setError] = useState<string | null>(null);     //using this state to better represent errors that occur while getting the code,we could've used alert instead too but that is ugly and not customizable 
-    const[hasVoted,setHasVoted] = useState(false);
+export default function PollPage() {
+  const params = useParams<{ pollId: string }>();
+  const [poll, setPoll] = useState<PollType | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [hasVoted, setHasVoted] = useState(false);
+  const [isExpired, setIsExpired] = useState(false);
 
-
-    
-
-
-
-
-   
-
-        const fetchPoll = async()=>{
-            const {pollId} =params;
-
-            if(!pollId) return;
-
-            try{
-
-                const repsonse = await axios.get(`/api/poll/${pollId}`);
-                setPoll(repsonse.data.poll);
-            }
-            catch(error:any){
-                console.error('Error fetching poll: ',error);
-                setError('Failed to load poll.');
-            }
-            finally{
-                setIsLoading(false);
-            }
-        };
-    
-
-
-
-
-    const handleVote=async(optionId:string)=>{
-        try{
-
-            if (!poll) {
-      alert('Poll data is not loaded yet. Please wait a moment.');
-      return; 
+  const fetchPoll = async () => {
+    const { pollId } = params;
+    if (!pollId) return;
+    try {
+      const response = await axios.get(`/api/poll/${pollId}`);
+      setPoll(response.data.poll);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to load poll.');
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-
-            await axios.post('/api/vote',{
-                pollId:poll?._id,
-                optionId:optionId
-
-            });
-            setHasVoted(true);
-            
-            alert('Thank you for your vote');
-            await fetchPoll();
-
-        }
-        catch (err: any) {
-      console.error('Error casting vote:', err);
-      alert('Failed to cast vote.');
+  const handleVote = async (optionId: string) => {
+    if (!poll) return;
+    try {
+      await axios.post('/api/vote', {
+        pollId: poll._id,
+        optionId: optionId,
+      });
+      // After voting, we just set hasVoted to true. We don't need to fetch again.
+      setHasVoted(true);
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Failed to cast vote.');
     }
+  };
 
-
-    }
-
-
-
-    useEffect(() => {
+  useEffect(() => {
     if (params.pollId) {
       fetchPoll();
     }
   }, [params.pollId]);
 
+  // This useEffect sets up a timer to check for expiry
+  useEffect(() => {
+    if (poll) {
+      const checkExpiry = () => {
+        const now = new Date();
+        const expiryDate = new Date(poll.expiresAt);
+        if (now > expiryDate) {
+          setIsExpired(true);
+          // When it expires, fetch the final results one last time
+          fetchPoll(); 
+          if (intervalId) clearInterval(intervalId); // Stop the timer
+        }
+      };
+
+      checkExpiry(); // Check immediately on load
+      const intervalId = setInterval(checkExpiry, 1000); // Check every second
+
+      return () => clearInterval(intervalId); // Cleanup on unmount
+    }
+  }, [poll]);
+
   if (isLoading) {
-    return <div>Loading poll...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-slate-900">
+        <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-slate-900 text-white p-4 text-center">
+        <div>
+          <h2 className="text-2xl font-bold text-red-500 mb-4">Error</h2>
+          <p className="text-gray-300">{error}</p>
+        </div>
+      </div>
+    );
   }
 
   if (!poll) {
     return <div>Poll not found.</div>;
   }
 
-      return (
+  return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
       <div className="w-full max-w-2xl p-8 space-y-6 bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg backdrop-blur-sm">
         <h1 className="text-3xl font-bold text-center text-yellow-400 mb-6">{poll.question}</h1>
         <div className="space-y-4">
-          {hasVoted ? (
-            // 2. If the user has voted, show the chart
+          {/* This is the main conditional rendering logic */}
+          {isExpired ? (
+            // Phase 3: Poll has ended, show final results
             <div>
-              <p className="text-center text-gray-300 mb-4">Thank you for voting! Here are the results:</p>
+              <p className="text-center text-red-500 font-semibold mb-4">This poll has ended. Final Results:</p>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={poll.options} layout="vertical">
                   <XAxis type="number" stroke="#94a3b8" />
@@ -125,9 +122,15 @@ export default function PollPage(){
                 </BarChart>
               </ResponsiveContainer>
             </div>
+          ) : hasVoted ? (
+            // Phase 2: User has voted, show "thank you" message
+            <div className="text-center py-10">
+              <p className="text-2xl font-semibold text-lime-400">Thank you for your vote!</p>
+              <p className="text-gray-400 mt-2">Results will be shown once the poll ends.</p>
+            </div>
           ) : (
-            // 3. Otherwise, show the voting buttons
-            poll.options.map((option) => 
+            // Phase 1: Poll is active, show voting buttons
+            poll.options.map((option) => (
               <button
                 key={option._id}
                 onClick={() => handleVote(option._id)}
@@ -138,18 +141,12 @@ export default function PollPage(){
             ))
           )}
         </div>
-        <p className="text-center text-sm text-gray-500 pt-4">
-          Poll expires at: {new Date(poll.expiresAt).toLocaleString()}
-        </p>
+        {!isExpired && (
+          <p className="text-center text-sm text-gray-500 pt-4">
+            Poll expires at: {new Date(poll.expiresAt).toLocaleString()}
+          </p>
+        )}
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-
