@@ -59,14 +59,14 @@ export default function PollPage() {
     }
   }, [params.pollId]);
 
-  // This useEffect sets up a timer to check for expiry
   useEffect(() => {
     if (poll) {
-        let intervalId: NodeJS.Timeout | null = null;
       const checkExpiry = () => {
         const now = new Date();
         const expiryDate = new Date(poll.expiresAt);
-        if (now > expiryDate) {
+        
+       
+        if (now > expiryDate && !isExpired) {
           setIsExpired(true);
           // When it expires, fetch the final results one last time
           fetchPoll(); 
@@ -74,12 +74,15 @@ export default function PollPage() {
         }
       };
 
-      checkExpiry(); // Check immediately on load
-      intervalId = setInterval(checkExpiry, 1000); // Check every second
+      const intervalId = setInterval(checkExpiry, 1000); // Check every second
+
+      // Run the check once immediately when the component loads
+      checkExpiry();
 
       return () => clearInterval(intervalId); // Cleanup on unmount
     }
-  }, [poll]);
+  }, [poll, isExpired, fetchPoll]); // Added isExpired and fetchPoll to the dependency array
+
 
   if (isLoading) {
     return (
