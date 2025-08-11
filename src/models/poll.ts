@@ -29,6 +29,13 @@ const PollSchema = new Schema({
     type: Date,
     required: true,
   },
+
+   adminId: {
+    type: Schema.Types.ObjectId, // type for a standard MongoDB ID
+    ref: 'admin',                // This creates a reference to our 'Admin' model
+    required: true,
+  },
+
  
 });
 
