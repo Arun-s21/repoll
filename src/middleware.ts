@@ -41,6 +41,6 @@ export async function middleware(request: NextRequest){
 
 }
 
-export const config = {
-    mathcer:['/admin:path*'],
+export const config = {                     //optimization
+    mathcer:['/admin:path*'],               //tells the middleware to run for /admin and every page whose url starts with /admin
 };
