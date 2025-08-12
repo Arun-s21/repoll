@@ -4,13 +4,9 @@ import { jwtVerify } from 'jose';
 
 export async function middleware(request: NextRequest){
 
-    const path = request.nextUrl.pathname;
-
-    const isAdminPath = path.startsWith('/admin');
-
     const token = request.cookies.get('token')?.value || '';
 
-    if(isAdminPath){
+    
 
         if(!token){
             //if user doesnt have token and tries to access admin path, redirect to login page
@@ -30,17 +26,12 @@ export async function middleware(request: NextRequest){
             return NextResponse.redirect(new URL('/admin/sign-in',request.url));
         }
 
-        //if path the user trying to access is not admin path let user proceed without any checks
-        
-
+      
 
     }
-     return NextResponse.next();
 
 
 
-}
-
-export const config = {                     //optimization
-    mathcer:['/admin:path*'],               //tells the middleware to run for /admin and every page whose url starts with /admin
+export const config = {                     
+    matcher:['/admin/create-poll'],               //tells the middleware to run for /admin
 };

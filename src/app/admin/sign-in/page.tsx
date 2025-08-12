@@ -20,8 +20,9 @@ export default function AdminSignInPage() {
         password,
       });
 
-      // On success, redirect to the admin's poll creation page
-      router.replace('/admin/create-poll');
+       alert('Login successful! About to redirect...');
+
+      router.replace('/');
     } catch (error: any) {
       console.error('Error during admin sign-in:', error);
       alert(error.response?.data?.message || 'Failed to sign in.');
