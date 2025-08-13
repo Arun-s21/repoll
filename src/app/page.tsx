@@ -5,7 +5,7 @@ export default function Home() {
   const router = useRouter();
   const onSubmit = ()=>{
     alert('Redirecting you to the sign-up page...Please wait');
-    router.replace('/admin/sign-up');
+    router.push('/admin/sign-up');
 
   }
 
