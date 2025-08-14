@@ -22,7 +22,7 @@ export default function AdminSignInPage() {
 
        alert('Login successful! About to redirect...');
 
-      router.replace('/');
+      router.replace('/admin/dashboard');
     } catch (error: any) {
       console.error('Error during admin sign-in:', error);
       alert(error.response?.data?.message || 'Failed to sign in.');

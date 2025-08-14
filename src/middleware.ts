@@ -3,6 +3,8 @@ import { jwtVerify } from 'jose';
 
 
 export async function middleware(request: NextRequest){
+    console.log('Middleware is running for path:', request.nextUrl.pathname);
+  console.log('Cookies received by middleware:', request.cookies.getAll());
 
     const token = request.cookies.get('token')?.value || '';
 
@@ -33,5 +35,5 @@ export async function middleware(request: NextRequest){
 
 
 export const config = {                     
-    matcher:['/admin/create-poll'],               //tells the middleware to run for /admin
+    matcher:['/admin/create-poll','/admin/dashboard'],               //tells the middleware to run for /admin
 };

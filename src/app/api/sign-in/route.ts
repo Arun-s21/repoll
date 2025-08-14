@@ -49,7 +49,10 @@ export async function POST(request:Request){        //we use POST here but we ar
             status:200
         });
 
-        response.headers.set('Set-Cookie',`token=${token}; HttpOnly: Path=/; Max_Age=86400`);
+         response.headers.set(
+      'Set-Cookie',
+      `token=${token}; HttpOnly; Path=/; Max-Age=86400`
+    );
 
         return response;
 
