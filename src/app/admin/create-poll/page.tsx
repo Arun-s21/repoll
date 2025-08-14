@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from 'axios';
 import { useRouter} from "next/navigation";
+import Link from "next/link";
 
 export default function CreatePollPage(){
 
@@ -66,8 +67,14 @@ export default function CreatePollPage(){
 
 
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+            <div className="relative flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+      
+      
+      <Link href="/admin/dashboard" className="absolute top-6 left-6 text-yellow-400 hover:underline text-sm">
+        &larr; Back to Dashboard
+      </Link>
                 <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+                 
                 <h1 className="text-4xl font-bold text-center text-yellow-400">Create new poll</h1>
                 <form onSubmit={onSubmit}>
                     <div>
