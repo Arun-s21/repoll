@@ -49,6 +49,7 @@ export default function PollPage() {
       });
       // After voting, we just set hasVoted to true. We don't need to fetch again.
       setHasVoted(true);
+      await fetchPoll(); 
     } catch (err) {
       const error = err as AxiosError<{ message: string }>;
       setError(error.response?.data?.message || 'Failed to cast vote');
@@ -61,30 +62,26 @@ export default function PollPage() {
     }
   }, [params.pollId,fetchPoll]);
 
-  useEffect(() => {
+   useEffect(() => {
     if (poll) {
-      const checkExpiry = () => {
+      const intervalId = setInterval(() => {
         const now = new Date();
         const expiryDate = new Date(poll.expiresAt);
         
-       
-        if (now > expiryDate && !isExpired) {
+        if (now > expiryDate) {
+          // If the poll expires, mark it as expired and stop the timer
           setIsExpired(true);
-          // When it expires, fetch the final results one last time
-          fetchPoll(); 
-          if (intervalId) clearInterval(intervalId); // Stop the timer
+          clearInterval(intervalId);
+        } else {
+          // If the poll is still active, fetch the latest results
+          fetchPoll();
         }
-      };
+      }, 5000); // Polls every 5 seconds
 
-      const intervalId = setInterval(checkExpiry, 1000); // Check every second
-
-      // Run the check once immediately when the component loads
-      checkExpiry();
-
-      return () => clearInterval(intervalId); // Cleanup on unmount
+      // This is a cleanup function. It runs if the user leaves the page.
+      return () => clearInterval(intervalId);
     }
-  }, [poll, isExpired, fetchPoll]); // Added isExpired and fetchPoll to the dependency array
-
+  }, [poll, fetchPoll]);
 
   if (isLoading) {
     return (
@@ -114,28 +111,24 @@ export default function PollPage() {
       <div className="w-full max-w-2xl p-8 space-y-6 bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg backdrop-blur-sm">
         <h1 className="text-3xl font-bold text-center text-yellow-400 mb-6">{poll.question}</h1>
         <div className="space-y-4">
-          {/* This is the main conditional rendering logic */}
-          {isExpired ? (
-            // Phase 3: Poll has ended, show final results
+          
+          {isExpired || hasVoted ? (
+            // If the poll is expired OR the user has voted, show the results
             <div>
-              <p className="text-center text-red-500 font-semibold mb-4">This poll has ended. Final Results:</p>
+              <p className="text-center text-gray-300 mb-4">
+                {isExpired ? 'This poll has ended. Final Results:' : 'Thank you for voting! Here are the current results:'}
+              </p>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={poll.options} layout="vertical">
-                  <XAxis type="number" stroke="#94a3b8" />
+                  <XAxis type="number" stroke="#94a3b8" allowDecimals={false} />
                   <YAxis type="category" dataKey="text" width={100} stroke="#94a3b8" />
                   <Tooltip cursor={{fill: 'rgba(255,255,255,0.1)'}} contentStyle={{backgroundColor: '#1e293b', border: '1px solid #334155'}}/>
                   <Bar dataKey="votes" fill="#facc15" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          ) : hasVoted ? (
-            // Phase 2: User has voted, show "thank you" message
-            <div className="text-center py-10">
-              <p className="text-2xl font-semibold text-lime-400">Thank you for your vote!</p>
-              <p className="text-gray-400 mt-2">Results will be shown once the poll ends.</p>
-            </div>
           ) : (
-            // Phase 1: Poll is active, show voting buttons
+            // Otherwise, show the voting buttons
             poll.options.map((option) => (
               <button
                 key={option._id}
