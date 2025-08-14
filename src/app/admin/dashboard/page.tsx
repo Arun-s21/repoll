@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type PollType ={
     _id:string;
@@ -10,10 +11,25 @@ type PollType ={
     createdAt:string;
 };
 
+
 export default function AdminPageDashboard(){
 
     const [polls, setPolls] = useState<PollType[]>([]);
     const[isLoading,setIsLoading] = useState(true);
+    const router=useRouter();
+    
+
+
+     const handleSignOut = async () => {
+        try {
+            await axios.get('/api/admin/sign-out');
+            // Redirect to the landing page on successful logout
+            router.replace('/');
+        } catch (error) {
+            console.error('Error signing out:', error);
+            alert('Failed to sign out.');
+        }
+    };
 
     useEffect(()=>{
         const fetchPolls = async()=>{
@@ -49,6 +65,14 @@ if (isLoading) {
             <Link href="/admin/create-poll" className="bg-gradient-to-r from-pink-500 to-orange-500 text-white font-semibold px-4 py-2 rounded-md hover:opacity-90 transition-opacity">
               Create New Poll
             </Link>
+            <div>
+            <button
+                onClick={handleSignOut}
+                className="font-semibold cursor-pointer text-white px-4 py-2 rounded-md bg-gradient-to-r from-red-500 to-red-700 hover:opacity-90 transition-opacity">
+                Sign Out
+            </button>
+            </div>
+            
             
           </div>
         </header>
