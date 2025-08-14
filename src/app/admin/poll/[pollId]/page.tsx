@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
@@ -21,28 +21,41 @@ type PollType = {
 
 export default function AdminPollPage() {
   const params = useParams<{ pollId: string }>();
+  const router = useRouter();
   const [poll, setPoll] = useState<PollType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchPoll = async () => {
-      const { pollId } = params;
-      if (!pollId) return;
-      try {
-        const response = await axios.get(`/api/poll/${pollId}`);
-        setPoll(response.data.poll);
-      } catch (err: any) {
-        setError(err.response?.data?.message || 'Failed to load poll.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (params.pollId) {
-      fetchPoll();
+  const fetchPoll = useCallback(async () => {
+    const { pollId } = params;
+    if (!pollId) return;
+    try {
+      const response = await axios.get(`/api/poll/${pollId}`);
+      setPoll(response.data.poll);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to load poll.');
+    } finally {
+      setIsLoading(false);
     }
-  }, [params.pollId]);
+  }, [params]);
+
+  // This useEffect fetches the initial poll data
+  useEffect(() => {
+    fetchPoll();
+  }, [fetchPoll]);
+
+  // This useEffect sets up a polling timer to get live updates
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      // Only fetch if the poll is not expired
+      if (poll && new Date() < new Date(poll.expiresAt)) {
+        fetchPoll();
+      }
+    }, 5000); // Refreshes every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [poll, fetchPoll]);
+
 
   const publicUrl = poll ? `${window.location.origin}/poll/${poll._id}` : '';
 
@@ -71,46 +84,53 @@ export default function AdminPollPage() {
     );
   }
 
+  const isExpired = new Date() > new Date(poll.expiresAt);
+
   return (
     <div className="flex flex-col items-center min-h-screen bg-slate-900 text-white p-4 md:p-8">
-      <div className="w-full max-w-4xl p-8 bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg backdrop-blur-sm">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-yellow-400 mb-2">{poll.question}</h1>
-          <p className="text-sm text-gray-400">
-            Poll ends at: {new Date(poll.expiresAt).toLocaleString()}
-          </p>
-        </div>
-
-        <div className="mb-8">
-          <label className="block text-sm font-semibold text-gray-300 mb-2">
-            Shareable Link
-          </label>
-          <div className="flex items-center">
-            <input
-              type="text"
-              value={publicUrl}
-              readOnly
-              className="w-full p-2 bg-slate-700 border border-slate-600 rounded-l-md text-gray-200"
-            />
-            <button
-              onClick={copyToClipboard}
-              className="bg-yellow-400 text-slate-900 font-semibold px-4 py-2 rounded-r-md hover:bg-yellow-500 transition-colors"
-            >
-              Copy
-            </button>
+       <div className="w-full max-w-4xl">
+        <Link href="/admin/dashboard" className="text-yellow-400 hover:underline mb-4 inline-block">
+          &larr; Back to Dashboard
+        </Link>
+        <div className="p-8 bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg backdrop-blur-sm">
+          <div className="mb-6">
+            <h1 className="text-3xl font-bold text-yellow-400 mb-2">{poll.question}</h1>
+            <p className={`text-sm ${isExpired ? 'text-red-500' : 'text-gray-400'}`}>
+              Status: {isExpired ? 'Ended' : 'Live'} &bull; Ends at: {new Date(poll.expiresAt).toLocaleString()}
+            </p>
           </div>
-        </div>
 
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-300 mb-4">Live Results</h2>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={poll.options} layout="vertical" margin={{ left: 50 }}>
-              <XAxis type="number" stroke="#94a3b8" allowDecimals={false} />
-              <YAxis type="category" dataKey="text" width={150} stroke="#94a3b8" />
-              <Tooltip cursor={{fill: 'rgba(255,255,255,0.1)'}} contentStyle={{backgroundColor: '#1e293b', border: '1px solid #334155'}}/>
-              <Bar dataKey="votes" fill="#facc15" />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="mb-8">
+            <label className="block text-sm font-semibold text-gray-300 mb-2">
+              Shareable Link
+            </label>
+            <div className="flex items-center">
+              <input
+                type="text"
+                value={publicUrl}
+                readOnly
+                className="w-full p-2 bg-slate-700 border border-slate-600 rounded-l-md text-gray-200"
+              />
+              <button
+                onClick={copyToClipboard}
+                className="bg-yellow-400 text-slate-900 font-semibold px-4 py-2 rounded-r-md hover:bg-yellow-500 transition-colors"
+              >
+                Copy
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-semibold text-gray-300 mb-4">Live Results</h2>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={poll.options} layout="vertical" margin={{ left: 50 }}>
+                <XAxis type="number" stroke="#94a3b8" allowDecimals={false} />
+                <YAxis type="category" dataKey="text" width={150} stroke="#94a3b8" />
+                <Tooltip cursor={{fill: 'rgba(255,255,255,0.1)'}} contentStyle={{backgroundColor: '#1e293b', border: '1px solid #334155'}}/>
+                <Bar dataKey="votes" fill="#facc15" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
     </div>

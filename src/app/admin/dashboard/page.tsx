@@ -66,8 +66,8 @@ if (isLoading) {
                     </p>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Link href={`/poll/${poll._id}`} className="text-yellow-400 hover:underline text-sm" target="_blank">
-                      View Public Page
+                    <Link href={`/admin/poll/${poll._id}`} className="text-yellow-400 hover:underline text-sm" target="_blank">
+                      View Results
                     </Link>
                     {/* We can add a link to the admin results page here later */}
                   </div>
