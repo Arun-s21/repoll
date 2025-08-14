@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function AdminSignInPage() {
   const router = useRouter();
@@ -32,35 +33,68 @@ export default function AdminSignInPage() {
   };
 
   return (
-    <div>
-      <h1>rePoll Sign-In</h1>
-      <form onSubmit={onSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <br />
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+      <div className="w-full max-w-md p-8 space-y-8 bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg backdrop-blur-sm">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-yellow-400">
+            rePoll Sign-In
+          </h1>
+          <p className="mt-2 text-gray-400">
+            Welcome back. Please sign in to continue.
+          </p>
         </div>
-        <div style={{ marginTop: '1rem' }}>
-          <label htmlFor="password">Password:</label>
-          <br />
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <form onSubmit={onSubmit} className="space-y-6">
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-gray-300"
+            >
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full mt-1 p-3 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              required
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-gray-300"
+            >
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full mt-1 p-3 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full py-3 font-semibold text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
+          >
+            {isSubmitting ? 'Signing In...' : 'Sign In'}
+          </button>
+        </form>
+        <div className="text-center text-gray-400">
+          <p>
+            Don&apos;t have an account?{' '}
+            <Link href="/admin/sign-up" className="text-yellow-400 hover:underline">
+              Sign Up
+            </Link>
+          </p>
         </div>
-        <button type="submit" disabled={isSubmitting} style={{ marginTop: '1rem' }}>
-          {isSubmitting ? 'Signing In...' : 'Sign In'}
-        </button>
-      </form>
+      </div>
     </div>
   );
 }
