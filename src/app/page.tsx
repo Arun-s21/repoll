@@ -20,7 +20,7 @@ export default function Home() {
         <h1 className="text-2xl font-bold text-yellow-400">RePoll</h1>
         <div>
           <Link href="/admin/sign-in" className="bg-yellow-400 text-slate-900 font-semibold px-4 py-2 rounded-md hover:bg-yellow-500 transition-colors mr-4">
-    Admin Sign In
+         Sign In
           </Link>
 
           
@@ -30,7 +30,7 @@ export default function Home() {
       {/* Main Content Section */}
       <main className="flex flex-col items-center justify-center text-center flex-grow">
         <h2 className="text-5xl md:text-7xl font-extrabold mb-4">
-          Create <span className="text-yellow-400">Live Polls</span>, Instantly.
+          Create <span className='bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-500 bg-clip-text text-transparent drop-shadow-[0_0_10px_rgba(255,193,7,0.5)] animate-pulse'>Live Polls</span>, Instantly.
         </h2>
         <p className="text-lg text-gray-400 mb-8 max-w-2xl">
           Engage your audience with real-time anonymous polls. Perfect for classrooms, live events, and streams.
@@ -39,7 +39,7 @@ export default function Home() {
         
         <button
           onClick={handleGetStarted}
-          className="px-8 py-4 font-bold text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-md hover:opacity-90 transition-opacity text-lg"
+          className="px-8 py-4 font-bold cursor-pointer text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-md hover:opacity-90 transition-opacity text-lg"
         >
           Get Started for Free
         </button>

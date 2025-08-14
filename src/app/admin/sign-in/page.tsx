@@ -81,7 +81,7 @@ export default function AdminSignInPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 font-semibold text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="w-full py-3 animate-pulse cursor-pointer font-semibold text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
           >
             {isSubmitting ? 'Signing In...' : 'Sign In'}
           </button>

@@ -23,14 +23,14 @@ export default function CreatePollPage(){
         setOptions(newOptions);                         // newOptions array is created with the updated option and the option at that specific index is changed and then our state variable is updated
     }
 
-    const addOptions = ()=>{
+    const addOption = ()=>{
         setOptions([...options,'']);            //adding a new blank space in the options array for the user to edit
                                                 //react will render a new blank space at the end of options box
                                                 //as the user will type into it handleOptionChange will come into effect 
 
     }
 
-    const removeOptions = (index:number)=>{         //we pass the index that we want to remove from the options
+    const removeOption = (index:number)=>{         //we pass the index that we want to remove from the options
     const newOptions = options.filter((_,i)=> i!=index);        //filter and the condition is i==index then skip that element
     setOptions(newOptions);                 //set options to the new filtered array
     
@@ -65,79 +65,79 @@ export default function CreatePollPage(){
         }
     }
 
-
-        return (
-            <div className="relative flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
-      
-      
-      <Link href="/admin/dashboard" className="absolute top-6 left-6 text-yellow-400 hover:underline text-sm">
-        &larr; Back to Dashboard
-      </Link>
-                <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
-                 
-                <h1 className="text-4xl font-bold text-center text-yellow-400">Create new poll</h1>
-                <form onSubmit={onSubmit}>
+  return (
+        <div className="relative flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+            <Link href="/admin/dashboard" className="absolute top-6 left-6 text-yellow-400 hover:underline text-sm">
+                &larr; Back to Dashboard
+            </Link>
+            <div className="w-full max-w-2xl p-8 space-y-8 bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg backdrop-blur-sm">
+                <div className="text-center">
+                    <h1 className="text-4xl font-bold text-yellow-400">Create New Poll</h1>
+                </div>
+                <form onSubmit={onSubmit} className="space-y-6">
                     <div>
-                        <label htmlFor='question'> Poll Question:</label>
-                        <br/>
-                        <input className="w-full p-3 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500" id='question' type='text' value={question} onChange={(e)=>{setQuestion(e.target.value)}} />
-
+                        <label htmlFor='question' className="block text-sm font-semibold text-gray-300">Poll Question:</label>
+                        <input
+                            id='question'
+                            type='text'
+                            value={question}
+                            onChange={(e) => setQuestion(e.target.value)}
+                            className="w-full mt-1 p-3 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                            required
+                        />
                     </div>
-               <div>
-          <label>Options:</label>
-          {options.map((option, index) => (             //for each option in the options array, we create a different div element with key=index of that element
-            <div key={index} style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <input className="flex-grow p-2 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-1 focus:ring-yellow-400"
-                type="text"
-                value={option}
-                onChange={(e) => handleOptionChange(index, e.target.value)}
-                placeholder={`Option ${index + 1}`}
-                required
-              />
-              {options.length > 2 && (                  //for removing we need the index of the element whichn we already have from the options.map
-                <button className="ml-2 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
-
-                 type="button" onClick={() => removeOptions(index)} style={{ marginLeft: '0.5rem' }}>            
-                  Remove
-                </button>
-              )}
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-300">Options:</label>
+                        {options.map((option, index) => (
+                            <div key={index} className="flex items-center mt-2">
+                                <input
+                                    type="text"
+                                    value={option}
+                                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                                    placeholder={`Option ${index + 1}`}
+                                    className="flex-grow p-2 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-1 focus:ring-yellow-400"
+                                    required
+                                />
+                                {options.length > 2 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => removeOption(index)}
+                                        className="ml-2 bg-red-600 text-white px-3 py-1 rounded-md text-sm hover:bg-red-700"
+                                    >
+                                        Remove
+                                    </button>
+                                )}
+                            </div>
+                        ))}
+                        <button
+                            type='button'
+                            onClick={addOption}
+                            className="mt-2 text-yellow-400 font-semibold hover:text-yellow-500"
+                        >
+                            + Add Option
+                        </button>
+                    </div>
+                    <div>
+                        <label htmlFor='duration' className="block text-sm font-semibold text-gray-300">Duration (in minutes):</label>
+                        <input
+                            type='number'
+                            id='duration'
+                            value={durationInMinutes}
+                            onChange={(e) => setDurationInMinutes(Number(e.target.value))}
+                            className="w-full mt-1 p-3 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500"
+                            required
+                            min="1"
+                        />
+                    </div>
+                    <button
+                        type='submit'
+                        disabled={isSubmitting}
+                        className="w-full py-3 mt-4 animate-pulse cursor-pointer font-semibold text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-md hover:opacity-90 transition-opacity disabled:opacity-50"
+                    >
+                        {isSubmitting ? 'Creating...' : 'Create Poll'}
+                    </button>
+                </form>
             </div>
-          ))}
-          
-
-          <button className="mt-2 text-yellow-400 font-semibold hover:text-yellow-500" type='button' onClick={addOptions}>Add Option</button>
-            </div>
-
-          <div>
-          <label htmlFor='duration'>Duration (in minutes):</label>
-          <br/>
-
-        
-          <input className="w-full p-3 bg-slate-700 border border-slate-600 rounded-md text-gray-200 focus:outline-none focus:ring-2 focus:ring-pink-500"
-
- type='number' id='duration' value={durationInMinutes} onChange={(e)=>setDurationInMinutes(Number(e.target.value))} required />
-
-
-          </div>
-
-          <button className="w-full py-3 mt-4 font-semibold text-white bg-gradient-to-r from-pink-500 to-orange-500 rounded-md hover:opacity-90 transition-opacity" type='submit' disabled={isSubmitting}>{isSubmitting?'Creating...':'Create Poll'}</button>
-
-
-
-        </form>
         </div>
-
-
-
-        </div>
-        );
-
-
-    }
-
-
-
-
-
-
-
+    );
+}
