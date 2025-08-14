@@ -66,7 +66,7 @@ export default function AdminPollPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-slate-900">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,1)_70%)] flex justify-center items-center min-h-screen bg-slate-900">
         <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -74,7 +74,7 @@ export default function AdminPollPage() {
 
   if (error || !poll) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen bg-slate-900 text-white p-4 text-center">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,1)_70%)] flex flex-col justify-center items-center min-h-screen bg-slate-900 text-white p-4 text-center">
         <h2 className="text-2xl font-bold text-red-500 mb-4">Error</h2>
         <p className="text-gray-300">{error || 'Poll not found.'}</p>
         <Link href="/admin/dashboard" className="mt-6 text-yellow-400 hover:underline">
@@ -87,7 +87,7 @@ export default function AdminPollPage() {
   const isExpired = new Date() > new Date(poll.expiresAt);
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-slate-900 text-white p-4 md:p-8">
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,1)_70%)] flex flex-col items-center min-h-screen bg-slate-900 text-white p-4 md:p-8">
        <div className="w-full max-w-4xl">
         <Link href="/admin/dashboard" className="text-yellow-400 hover:underline mb-4 inline-block">
           &larr; Back to Dashboard

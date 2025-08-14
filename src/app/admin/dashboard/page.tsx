@@ -50,14 +50,14 @@ export default function AdminPageDashboard(){
     },[]);
 if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-slate-900">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,1)_70%)] flex justify-center items-center min-h-screen bg-slate-900">
         <div className="w-12 h-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-4 md:p-8">
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,1)_70%)] min-h-screen bg-slate-900 text-white p-4 md:p-8">
       <div className="container mx-auto">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-yellow-400">Dashboard</h1>

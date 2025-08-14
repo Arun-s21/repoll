@@ -13,11 +13,11 @@ export default function Home() {
 
   return (
     // Main container with dark background and centered content
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,1)_70%)] flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
       
       {/* Navbar Section */}
       <nav className="w-full max-w-5xl mx-auto flex justify-between items-center py-4">
-        <h1 className="text-2xl font-bold text-yellow-400">RePoll</h1>
+        <h1 className=" text-2xl font-bold text-yellow-400">RePoll</h1>
         <div>
           <Link href="/admin/sign-in" className="bg-yellow-400 text-slate-900 font-semibold px-4 py-2 rounded-md hover:bg-yellow-500 transition-colors mr-4">
          Sign In

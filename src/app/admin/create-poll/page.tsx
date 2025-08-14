@@ -66,7 +66,7 @@ export default function CreatePollPage(){
     }
 
   return (
-        <div className="relative flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,1)_70%)] relative flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
             <Link href="/admin/dashboard" className="absolute top-6 left-6 text-yellow-400 hover:underline text-sm">
                 &larr; Back to Dashboard
             </Link>

@@ -42,11 +42,11 @@ const [isSubmitting,setIsSubmitting] = useState(false);
     };
 
  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.15)_0%,rgba(0,0,0,1)_70%)] flex flex-col items-center justify-center min-h-screen bg-slate-900 text-white p-4">
       <div className="w-full max-w-md p-8 space-y-8 bg-slate-800/50 border border-slate-700 rounded-lg shadow-lg backdrop-blur-sm">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-yellow-400">
-            Create rePoll Account
+            Create RePoll Account
           </h1>
           <p className="mt-2 text-gray-400">
             Sign up to start creating polls
