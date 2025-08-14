@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import dbConnect from "@/lib/dbConnect";
-import PollModel from "@/models/Poll";
+import PollModel from "@/models/poll";
 import { AxiosError } from "axios";
 export async function POST(request:Request){
     await dbConnect();
