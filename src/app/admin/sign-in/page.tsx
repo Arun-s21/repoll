@@ -4,7 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-
+import { AxiosError } from 'axios';
 export default function AdminSignInPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
@@ -24,7 +24,8 @@ export default function AdminSignInPage() {
        alert('Login successful! About to redirect...');
 
       router.replace('/admin/dashboard');
-    } catch (error: any) {
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
       console.error('Error during admin sign-in:', error);
       alert(error.response?.data?.message || 'Failed to sign in.');
     } finally {

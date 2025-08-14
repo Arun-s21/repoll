@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import Link from 'next/link';
+import { AxiosError } from 'axios';
 
 type OptionType = {
   _id: string;
@@ -21,7 +22,6 @@ type PollType = {
 
 export default function AdminPollPage() {
   const params = useParams<{ pollId: string }>();
-  const router = useRouter();
   const [poll, setPoll] = useState<PollType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +32,9 @@ export default function AdminPollPage() {
     try {
       const response = await axios.get(`/api/poll/${pollId}`);
       setPoll(response.data.poll);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load poll.');
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      setError(error.response?.data?.message || 'Failed to load poll.');
     } finally {
       setIsLoading(false);
     }

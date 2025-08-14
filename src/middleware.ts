@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest){
             return NextResponse.next();
 
         }
-        catch(_error){
+        catch{
             return NextResponse.redirect(new URL('/admin/sign-in',request.url));
         }
 

@@ -1,9 +1,10 @@
 'use client';
 
-import { use, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 export default function AdminSignUpPage(){
 
@@ -29,7 +30,8 @@ const [isSubmitting,setIsSubmitting] = useState(false);
 
 
         }
-        catch(error:any){
+        catch(err){
+            const error = err as AxiosError<{ message: string }>;
             console.error('Error creating admin: ',error);
             alert(error.response?.data?.message ||'Unexpected error occurred while creating your account');
         }

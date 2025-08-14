@@ -23,7 +23,7 @@ export async function GET(request:NextRequest){
 
         return NextResponse.json({success:true, polls},{status:200});
 
-      } catch (error) {
+      } catch {
     return NextResponse.json({ message: 'Invalid token or error fetching polls' }, { status: 500 });
   }
 }

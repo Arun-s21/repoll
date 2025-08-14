@@ -100,7 +100,7 @@ if (isLoading) {
             </div>
           ) : (
             <div className="text-center py-16 bg-slate-800/50 border border-slate-700 rounded-lg backdrop-blur-sm">
-              <p className="text-lg text-gray-400">You haven't created any polls yet.</p>
+              <p className="text-lg text-gray-400">You have not created any polls yet.</p>
               <Link href="/admin/create-poll" className="text-yellow-400 hover:underline mt-4 inline-block font-semibold">
                 Create your first one!
               </Link>

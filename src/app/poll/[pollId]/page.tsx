@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-
+import { AxiosError } from 'axios';
 type OptionType = {
   _id: string;
   text: string;
@@ -26,18 +26,19 @@ export default function PollPage() {
   const [hasVoted, setHasVoted] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
 
-  const fetchPoll = async () => {
+  const fetchPoll = useCallback(async () => {
     const { pollId } = params;
     if (!pollId) return;
     try {
       const response = await axios.get(`/api/poll/${pollId}`);
       setPoll(response.data.poll);
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to load poll.');
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      setError(error.response?.data?.message || 'Failed to load poll.');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [params]);
 
   const handleVote = async (optionId: string) => {
     if (!poll) return;
@@ -48,8 +49,9 @@ export default function PollPage() {
       });
       // After voting, we just set hasVoted to true. We don't need to fetch again.
       setHasVoted(true);
-    } catch (err: any) {
-      alert(err.response?.data?.message || 'Failed to cast vote.');
+    } catch (err) {
+      const error = err as AxiosError<{ message: string }>;
+      setError(error.response?.data?.message || 'Failed to cast vote');
     }
   };
 
@@ -57,7 +59,7 @@ export default function PollPage() {
     if (params.pollId) {
       fetchPoll();
     }
-  }, [params.pollId]);
+  }, [params.pollId,fetchPoll]);
 
   useEffect(() => {
     if (poll) {

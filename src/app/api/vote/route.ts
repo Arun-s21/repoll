@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import dbConnect from "@/lib/dbConnect";
 import PollModel from "@/models/Poll";
-
+import { AxiosError } from "axios";
 export async function POST(request:Request){
     await dbConnect();
 
@@ -29,10 +31,10 @@ export async function POST(request:Request){
             },
         {status:400});
         }
-
+        
         const result = await PollModel.updateOne(             
 
-            {_id:pollId,'options._id':optionId},            //go to object in the poll schema where _id is pollId and optionsId is optionId                                                            
+            {_id:pollId,'options._id':optionId},           //go to object in the poll schema where _id is pollId and optionsId is optionId                                                            
             {$inc:{'options.$.votes':1}} as any            //update that optionId's votes to increment by 1
                                                             //optionId is in quotes because there exists a dot between the name so we are using '' to tell js taht it is a whole name and not to return us the id of a object like(object.id)
             );
@@ -56,7 +58,8 @@ export async function POST(request:Request){
     );
     }
 
-    catch(error){
+    catch(err){
+        const error = err as AxiosError<{ message: string }>;
         console.error('Some unexpected error occurred:',error);
         return Response.json(
       { success: false, message: 'Error casting vote' },

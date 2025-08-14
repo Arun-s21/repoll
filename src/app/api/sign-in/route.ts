@@ -2,8 +2,6 @@ import dbConnect from '@/lib/dbConnect';
 import AdminModel from '@/models/Admin';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
-import { serializeUseCacheCacheStore } from 'next/dist/server/resume-data-cache/cache-store';
-import { PassThrough } from 'stream';
 
 export async function POST(request:Request){        //we use POST here but we are not saving anything to the db still we use post instead of get 
                                                     //this is because in GET request the enetered information by the user is shown in the URL which can be a security vulnerability
