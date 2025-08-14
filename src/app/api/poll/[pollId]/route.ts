@@ -1,5 +1,5 @@
 import dbConnect from '@/lib/dbConnect';
-import PollModel from '@/models/poll';
+import PollModel from '@/models/Poll';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest){

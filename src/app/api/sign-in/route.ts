@@ -1,5 +1,5 @@
 import dbConnect from '@/lib/dbConnect';
-import AdminModel from '@/models/admin';
+import AdminModel from '@/models/Admin';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 import { serializeUseCacheCacheStore } from 'next/dist/server/resume-data-cache/cache-store';
@@ -35,7 +35,7 @@ export async function POST(request:Request){        //we use POST here but we ar
         //both password and email are correct so now we make a JWT for the user
 
         const tokenPayload  = {
-            id:admin._id,
+            id:admin._id.toString(),
             email:admin.email
         };
 

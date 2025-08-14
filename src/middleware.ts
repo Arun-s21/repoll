@@ -3,8 +3,6 @@ import { jwtVerify } from 'jose';
 
 
 export async function middleware(request: NextRequest){
-    console.log('Middleware is running for path:', request.nextUrl.pathname);
-  console.log('Cookies received by middleware:', request.cookies.getAll());
 
     const token = request.cookies.get('token')?.value || '';
 

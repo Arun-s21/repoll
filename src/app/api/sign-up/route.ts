@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import AdminModel from "@/models/admin";
+import AdminModel from "@/models/Admin";
 import bcrypt from "bcryptjs";
 
 export async function POST(request:Request){

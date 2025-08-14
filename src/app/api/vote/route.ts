@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import PollModel from "@/models/poll";
+import PollModel from "@/models/Poll";
 
 export async function POST(request:Request){
     await dbConnect();

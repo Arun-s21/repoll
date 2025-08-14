@@ -1,11 +1,28 @@
 import dbConnect from '@/lib/dbConnect';
-import PollModel from '@/models/poll';
+import PollModel from '@/models/Poll';
+import { NextRequest,NextResponse } from 'next/server';
+import { jwtVerify } from 'jose';
 
-export async function POST(request:Request){
+export async function POST(request:NextRequest){
 
     await dbConnect();
 
     try{
+
+      const token = request.cookies.get('token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
+    const { payload } = await jwtVerify(token, secret);
+    const adminId = payload.id as string;
+
+
+
+
 
         const{ question,options,durationInMinutes } = await request.json();
         //basic validation checks 
@@ -35,7 +52,8 @@ export async function POST(request:Request){
     const newPoll = new PollModel({
         question,
         options:pollOptions,
-        expiresAt
+        expiresAt,
+        adminId:adminId
     });
     
     await newPoll.save();
