@@ -41,12 +41,6 @@ This project is built with a modern, scalable, and secure technology stack.
 
 To get a local copy up and running, follow these simple steps.
 
-### Prerequisites
-
-* Node.js (v18 or later)
-* npm
-* A free MongoDB Atlas account
-* A free Brevo account
 
 ### Installation
 
@@ -68,7 +62,7 @@ To get a local copy up and running, follow these simple steps.
         ```env
         DATABASE_URL=your_mongodb_connection_string
         JWT_SECRET=your_super_secret_jwt_key
-        BREVO_API_KEY=your_brevo_api_key
+
         ```
 5.  **Run the development server**
     ```sh
